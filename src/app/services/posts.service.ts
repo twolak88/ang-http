@@ -11,12 +11,10 @@ export class PostsService {
   constructor(private http: HttpClient) { }
 
   createAndStorePosts(post: Post) {
-    this.http.post<{ name: string }>(
+    return this.http.post<{ name: string }>(
       'https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
       post //angular automatically convert data to json format
-    ).subscribe(responseData => { // subscription needed, managed by angular
-      console.log(responseData);
-    });
+    );
   }
 
   fetchPosts () {
@@ -30,5 +28,9 @@ export class PostsService {
       }
       return postsArray;
     }));
+  }
+
+  deletePosts() {
+    return this.http.delete('https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json');
   }
 }

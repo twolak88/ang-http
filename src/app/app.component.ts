@@ -19,7 +19,10 @@ export class AppComponent {
 
   onCreatePost(postData: Post) {
     // Send Http request
-    this.postsService.createAndStorePosts(postData);
+    this.postsService.createAndStorePosts(postData).subscribe(responseData => { // subscription needed, managed by angular
+      this.fetchPosts();
+      // alert("Posts successfully added!");
+    });;
   }
 
   onFetchPosts() {
@@ -29,6 +32,10 @@ export class AppComponent {
 
   onClearPosts() {
     // Send Http request
+    this.postsService.deletePosts().subscribe(responseData => {
+      this.fetchPosts();
+      // alert("All posts deleted!");
+    });
   }
 
   private fetchPosts() {
