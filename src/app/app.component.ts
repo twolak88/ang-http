@@ -10,6 +10,7 @@ import { Post } from './post.model';
 })
 export class AppComponent {
   loadedPosts: Post[] = [];
+  isFetching = false;
 
   constructor(private http: HttpClient) {}
 
@@ -37,6 +38,7 @@ export class AppComponent {
   }
 
   private fetchPosts() {
+    this.isFetching = true;
     this.http.get<{ [key: string]: Post }>('https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json')
     .pipe(map(responseData => { //observable operator to transorm data
       const postsArray: Post[] = [];
@@ -48,6 +50,7 @@ export class AppComponent {
       return postsArray;
     }))
     .subscribe(posts => {
+      this.isFetching = false;
       this.loadedPosts = posts;
     });
   }
