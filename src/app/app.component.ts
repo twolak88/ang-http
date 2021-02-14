@@ -9,7 +9,7 @@ import { Post } from './post.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  loadedPosts = [];
+  loadedPosts: Post[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -48,7 +48,7 @@ export class AppComponent {
       return postsArray;
     }))
     .subscribe(posts => {
-      console.log(posts);
+      this.loadedPosts = posts;
     });
   }
 }
