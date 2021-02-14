@@ -20,7 +20,6 @@ export class AppComponent {
 
   onCreatePost(postData: Post) {
     // Send Http request
-    this.error = null;
     this.postsService.createAndStorePosts(postData).subscribe(responseData => { // subscription needed, managed by angular
       this.fetchPosts();
       // alert("Posts successfully added!");
@@ -40,12 +39,19 @@ export class AppComponent {
     this.postsService.deletePosts().subscribe(responseData => {
       this.fetchPosts();
       // alert("All posts deleted!");
+    }, error => {
+      this.error = error.message
+      console.log(error);
     });
   }
 
-  private fetchPosts() {
+  onHandleError() {
     this.error = null;
+  }
+
+  private fetchPosts() {
     this.isFetching = true;
+    this.loadedPosts = [];
     this.postsService.fetchPosts().subscribe(posts => {
       this.isFetching = false;
       this.loadedPosts = posts;
