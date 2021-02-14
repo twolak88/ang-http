@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { map } from 'rxjs/operators'
 import { Post } from './post.model';
+import { PostsService } from './services/posts.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ export class AppComponent {
   loadedPosts: Post[] = [];
   isFetching = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private postsService: PostsService) {}
 
   ngOnInit() {
     this.fetchPosts();
@@ -20,12 +19,7 @@ export class AppComponent {
 
   onCreatePost(postData: Post) {
     // Send Http request
-    this.http.post<{ name: string }>(
-      'https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
-      postData //angular automatically convert data to json format
-    ).subscribe(responseData => { // subscription needed, managed by angular
-      console.log(responseData);
-    });
+    this.postsService.createAndStorePosts(postData);
   }
 
   onFetchPosts() {
@@ -39,19 +33,10 @@ export class AppComponent {
 
   private fetchPosts() {
     this.isFetching = true;
-    this.http.get<{ [key: string]: Post }>('https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json')
-    .pipe(map(responseData => { //observable operator to transorm data
-      const postsArray: Post[] = [];
-      for (const key in responseData) {
-        if (responseData.hasOwnProperty(key)) {
-          postsArray.push({ ...responseData[key], id: key });
-        }
-      }
-      return postsArray;
-    }))
-    .subscribe(posts => {
+    this.postsService.fetchPosts().subscribe(posts => {
       this.isFetching = false;
       this.loadedPosts = posts;
     });
+
   }
 }
