@@ -25,7 +25,6 @@ export class AppComponent {
       // alert("Posts successfully added!");
     }, error => {
       this.error = error.message
-      console.log(error);
     });
   }
 
@@ -41,7 +40,6 @@ export class AppComponent {
       // alert("All posts deleted!");
     }, error => {
       this.error = error.message
-      console.log(error);
     });
   }
 
@@ -58,7 +56,6 @@ export class AppComponent {
     }, error => {
       this.isFetching = false;
       this.error = error.message
-      console.log(error);
     });
   }
 }
