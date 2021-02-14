@@ -15,7 +15,12 @@ export class AppComponent {
 
   onCreatePost(postData: { title: string; content: string }) {
     // Send Http request
-    console.log(postData);
+    this.http.post(
+      'https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
+      postData //angular automatically convert data to json format
+    ).subscribe(responseData => { // subscription needed, managed by angular
+      console.log(responseData);
+    });
   }
 
   onFetchPosts() {
