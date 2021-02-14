@@ -10,6 +10,7 @@ import { PostsService } from './services/posts.service';
 export class AppComponent {
   loadedPosts: Post[] = [];
   isFetching = false;
+  error = null;
 
   constructor(private postsService: PostsService) {}
 
@@ -19,6 +20,7 @@ export class AppComponent {
 
   onCreatePost(postData: Post) {
     // Send Http request
+    this.error = null;
     this.postsService.createAndStorePosts(postData).subscribe(responseData => { // subscription needed, managed by angular
       this.fetchPosts();
       // alert("Posts successfully added!");
@@ -39,11 +41,15 @@ export class AppComponent {
   }
 
   private fetchPosts() {
+    this.error = null;
     this.isFetching = true;
     this.postsService.fetchPosts().subscribe(posts => {
       this.isFetching = false;
       this.loadedPosts = posts;
+    }, error => {
+      this.isFetching = false;
+      this.error = error.message
+      console.log(error);
     });
-
   }
 }
