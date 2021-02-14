@@ -24,7 +24,10 @@ export class AppComponent {
     this.postsService.createAndStorePosts(postData).subscribe(responseData => { // subscription needed, managed by angular
       this.fetchPosts();
       // alert("Posts successfully added!");
-    });;
+    }, error => {
+      this.error = error.message
+      console.log(error);
+    });
   }
 
   onFetchPosts() {

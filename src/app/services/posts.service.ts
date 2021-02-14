@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators'
+import { throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators'
 import { Post } from '../post.model';
 
 @Injectable({
@@ -14,20 +15,30 @@ export class PostsService {
     return this.http.post<{ name: string }>(
       'https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
       post //angular automatically convert data to json format
+    ).pipe(
+      catchError(errorRes => {
+        //sent to other server
+        return throwError(errorRes);
+      })
     );
   }
 
   fetchPosts () {
     return this.http.get<{ [key: string]: Post }>('https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json')
-    .pipe(map(responseData => { //observable operator to transorm data
-      const postsArray: Post[] = [];
-      for (const key in responseData) {
-        if (responseData.hasOwnProperty(key)) {
-          postsArray.push({ ...responseData[key], id: key });
+    .pipe(
+      map(responseData => { //observable operator to transorm data
+        const postsArray: Post[] = [];
+        for (const key in responseData) {
+          if (responseData.hasOwnProperty(key)) {
+            postsArray.push({ ...responseData[key], id: key });
+          }
         }
-      }
-      return postsArray;
-    }));
+        return postsArray;
+      }), catchError(errorRes => {
+        //sent to other server
+        return throwError(errorRes);
+      })
+    );
   }
 
   deletePosts() {
