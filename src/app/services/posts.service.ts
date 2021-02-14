@@ -16,7 +16,8 @@ export class PostsService {
       'https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
       post, //angular automatically convert data to json format
       {
-        observe: 'response'
+        observe: 'response',
+        responseType: 'json' //default
       }
     ).pipe(
       catchError(errorRes => {
@@ -36,7 +37,8 @@ export class PostsService {
         headers: new HttpHeaders({
           'Custom-Header': 'Hello'
         }),
-        params: searchParams
+        params: searchParams,
+        responseType: 'json' //default
       }
     )
     .pipe(
@@ -58,7 +60,8 @@ export class PostsService {
   deletePosts() {
     return this.http.delete('https://ang-http-backend-01-default-rtdb.firebaseio.com/posts.json',
       {
-        observe: 'events' //'body' | 'events' | 'response'
+        observe: 'events', //'body' | 'events' | 'response'
+        responseType: 'text' //'arraybuffer'|'blob'|'json'|'text'
       }
     ).pipe(tap(event => {
       console.log(event);
